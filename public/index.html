@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>TP Nodemailer</title>
   <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
   <h1>TP Nodemailer</h1>
@@ -16,6 +15,14 @@
     <input type="email" name="email" placeholder="Email" required>
     <input type="password" name="password" placeholder="Mot de passe" required>
     <button type="submit">S'inscrire</button>
+  </form>
+
+  <!-- Formulaire Welcome -->
+  <h2>Envoyer un email de bienvenue</h2>
+  <form id="welcomeForm">
+    <input type="text" name="name" placeholder="Nom" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <button type="submit">Envoyer bienvenue</button>
   </form>
 
   <!-- Formulaire contact -->
@@ -32,7 +39,7 @@
   <h2>Newsletter</h2>
   <form id="newsletterForm">
     <input type="text" name="name" placeholder="Votre nom" required>
-    <input type="text" name="emails" placeholder="Votre email (séparés par , ou ;)" required>
+    <input type="text" name="emails" placeholder="Emails séparés par , ou ;" required>
     <textarea name="content" placeholder="Contenu de la newsletter" required></textarea>
     <button type="submit">Envoyer newsletter</button>
   </form>
@@ -59,6 +66,20 @@
       e.preventDefault();
       const data = Object.fromEntries(new FormData(registerForm));
       const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await res.text();
+      alert(text);
+    });
+
+    // Welcome
+    const welcomeForm = document.getElementById('welcomeForm');
+    welcomeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(welcomeForm));
+      const res = await fetch('/api/welcome', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

@@ -8,6 +8,7 @@ import contactRoutes from './routes/contact.js';
 import forgotPasswordRoutes from './routes/forgotPassword.js';
 import resetPasswordRoutes from './routes/resetPassword.js';
 import emailRoutes from './routes/email.js';
+import welcomeRoutes from './routes/welcome.js';
 
 
 dotenv.config();
@@ -28,6 +29,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/forgot-password', forgotPasswordRoutes);
 app.use('/api/reset-password', resetPasswordRoutes);
 app.use('/api/email', emailRoutes);
+app.use('/api/welcome', welcomeRoutes);
 
 // Démarrer le serveur
 app.listen(PORT, () => {
