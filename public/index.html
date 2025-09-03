@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP Nodemailer</title>
+</head>
+<body>
+  <h1>TP Nodemailer</h1>
+
+  <!-- Création de compte -->
+  <h2>Créer un compte</h2>
+  <form id="registerForm">
+    <input type="text" name="name" placeholder="Nom" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Mot de passe" required>
+    <button type="submit">S'inscrire</button>
+  </form>
+
+  <!-- Formulaire contact -->
+  <h2>Formulaire de contact</h2>
+  <form id="contactForm" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Nom" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <textarea name="message" placeholder="Message" required></textarea>
+    <input type="file" name="file" accept=".pdf,.jpg,.png">
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <!-- Newsletter -->
+  <h2>Newsletter</h2>
+  <form id="newsletterForm">
+    <input type="text" name="name" placeholder="Votre nom" required>
+    <input type="email" name="email" placeholder="Votre email" required>
+    <textarea name="content" placeholder="Contenu de la newsletter" required></textarea>
+    <button type="submit">Envoyer newsletter</button>
+  </form>
+
+  <!-- Mot de passe oublié -->
+  <h2>Mot de passe oublié</h2>
+  <form id="forgotForm">
+    <input type="email" name="email" placeholder="Votre email" required>
+    <button type="submit">Envoyer le lien</button>
+  </form>
+
+  <!-- Réinitialisation mot de passe -->
+  <h2>Réinitialiser mot de passe</h2>
+  <form id="resetForm">
+    <input type="text" name="token" placeholder="Token reçu par email" required>
+    <input type="password" name="password" placeholder="Nouveau mot de passe" required>
+    <button type="submit">Valider</button>
+  </form>
+
+  <script>
+    // Création de compte
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(registerForm));
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await res.text();
+      alert(text);
+    });
+
+    // Contact
+    const contactForm = document.getElementById('contactForm');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(contactForm);
+      const res = await fetch('/api/contact', { method: 'POST', body: data });
+      const text = await res.text();
+      alert(text);
+    });
+
+    // Newsletter
+    const newsletterForm = document.getElementById('newsletterForm');
+    newsletterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(newsletterForm));
+      const res = await fetch('/api/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await res.text();
+      alert(text);
+    });
+
+    // Mot de passe oublié
+    const forgotForm = document.getElementById('forgotForm');
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(forgotForm));
+      const res = await fetch('/api/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await res.text();
+      alert(text);
+    });
+
+    // Réinitialisation mot de passe
+    const resetForm = document.getElementById('resetForm');
+    resetForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(resetForm));
+      const res = await fetch('/api/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await res.text();
+      alert(text);
+    });
+  </script>
+</body>
+</html>

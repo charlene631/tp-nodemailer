@@ -1,0 +1,34 @@
+[
+  {
+    "name": "cha",
+    "email": "charlene.dev2025@gmail.com",
+    "password": "$2b$10$CovVA9/NWWaGcr8UQJGeHuw/nUQvN4fDPhBpNLPq8murobD13DI8y",
+    "status": "pending",
+    "token": "ce7b3e339405da25a3ea448bcada9bd0",
+    "tokenExpires": 1756895461965
+  },
+  {
+    "name": "cha",
+    "email": "chableu@gmail.com",
+    "password": "$2b$10$Vu3L4TBApDQF8mlzU9MxH.rjTObRpi3qxhTZuquDcbORm6Y69ee2m",
+    "status": "pending",
+    "token": "bfce2bd0bb1b1d9435da91c527fba721",
+    "tokenExpiry": 1756895670222
+  },
+  {
+    "name": "chat",
+    "email": "chatbleu@mail.com",
+    "password": "$2b$10$FNVT4Sqxh0I4PZNZ5/F1EuOp0O6PYekusgIEePmqhXxRl5i4zJzR.",
+    "status": "pending",
+    "token": "526581cc5e564676aa0d94dd76fa1569",
+    "tokenExpiry": 1756895859911
+  },
+  {
+    "name": "chats",
+    "email": "chatsbleu@mail.com",
+    "password": "$2b$10$O8Vfhhnr9H3pv8Ptbo6qb.FDlM8NTyZwbDD6asXDWYoLgx3Zu0yAC",
+    "status": "active",
+    "token": null,
+    "tokenExpiry": null
+  }
+]
