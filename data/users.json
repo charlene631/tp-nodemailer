@@ -30,5 +30,21 @@
     "status": "active",
     "token": null,
     "tokenExpiry": null
+  },
+  {
+    "name": "donuts",
+    "email": "donut@mail.com",
+    "password": "$2b$10$jXRt7Jm1V0bXNdLnZ4hvEuzrmGr11qsoNZQQP3XD0vk8LL6vHcsri",
+    "status": "active",
+    "token": null,
+    "tokenExpiry": null
+  },
+  {
+    "name": "donuts",
+    "email": "donutsviolets@mail.com",
+    "password": "$2b$10$WRht8XtSDLAS2CiKcbb2QON1k77UDjrHh14Tvvj/ViuIh0THd14Ga",
+    "status": "active",
+    "token": null,
+    "tokenExpiry": null
   }
 ]

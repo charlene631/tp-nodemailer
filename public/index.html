@@ -17,14 +17,6 @@
     <button type="submit">S'inscrire</button>
   </form>
 
-  <!-- Formulaire Welcome -->
-  <h2>Envoyer un email de bienvenue</h2>
-  <form id="welcomeForm">
-    <input type="text" name="name" placeholder="Nom" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <button type="submit">Envoyer bienvenue</button>
-  </form>
-
   <!-- Formulaire contact -->
   <h2>Formulaire de contact</h2>
   <form id="contactForm" enctype="multipart/form-data">
@@ -66,20 +58,6 @@
       e.preventDefault();
       const data = Object.fromEntries(new FormData(registerForm));
       const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const text = await res.text();
-      alert(text);
-    });
-
-    // Welcome
-    const welcomeForm = document.getElementById('welcomeForm');
-    welcomeForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(welcomeForm));
-      const res = await fetch('/api/welcome', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
