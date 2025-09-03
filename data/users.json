@@ -26,7 +26,7 @@
   {
     "name": "chats",
     "email": "chatsbleu@mail.com",
-    "password": "$2b$10$O8Vfhhnr9H3pv8Ptbo6qb.FDlM8NTyZwbDD6asXDWYoLgx3Zu0yAC",
+    "password": "$2b$10$rEp63.mEwfc/tzqi.7jN5u8dYys495.7.2pSKthGyj2aqBOHZ.auC",
     "status": "active",
     "token": null,
     "tokenExpiry": null

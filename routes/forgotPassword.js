@@ -20,13 +20,26 @@ const emailSchema = Joi.object({
 });
 
 // Transporteur Nodemailer
+//const transporter = nodemailer.createTransport({
+  //service: 'gmail',
+  //auth: {
+    //user: process.env.GMAIL_USER,
+    //pass: process.env.GMAIL_APP_PASSWORD
+  //},
+  //tls: { rejectUnauthorized: false }
+//});
+
+// Mailtrap
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: process.env.MAILTRAP_HOST,
+  port: process.env.MAILTRAP_PORT,
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
+    user: process.env.MAILTRAP_USER,
+    pass: process.env.MAILTRAP_PASS
   },
-  tls: { rejectUnauthorized: false }
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 // POST /api/forgot-password
