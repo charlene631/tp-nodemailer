@@ -17,15 +17,35 @@
     <button type="submit">S'inscrire</button>
   </form>
 
-  <!-- Formulaire contact -->
+  <!-- Formulaire contact avec drag & drop -->
   <h2>Formulaire de contact</h2>
   <form id="contactForm" enctype="multipart/form-data">
     <input type="text" name="name" placeholder="Nom" required>
     <input type="email" name="email" placeholder="Email" required>
     <textarea name="message" placeholder="Message" required></textarea>
-    <input type="file" name="file" accept=".pdf,.jpg,.png">
-    <button type="submit">Envoyer</button>
+
+    <!-- Zone Drag & Drop -->
+    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+      <p>📁 Cliquez ici ou glissez-déposez vos fichiers</p>
+      <input type="file" id="fileInput" class="file-input" name="file" accept=".txt,.pdf,.jpg,.jpeg,.png">
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div id="status" class="status"></div>
+
+    <button type="submit" class="upload-btn" disabled>Envoyer</button>
   </form>
+
+  <!-- Canvas signature -->
+  <div class="signature-container">
+    <h3>✍️ Dessinez votre signature</h3>
+    <canvas id="signatureCanvas" width="500" height="200" style="border:1px solid #fff; border-radius:8px;"></canvas>
+    <div>
+      <button id="clearSignature">Effacer</button>
+      <button id="saveSignature">Valider la signature</button>
+    </div>
+  </div>
 
   <!-- Newsletter -->
   <h2>Newsletter</h2>
@@ -51,72 +71,139 @@
     <button type="submit">Valider</button>
   </form>
 
-  <script>
-    // Création de compte
-    const registerForm = document.getElementById('registerForm');
-    registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(registerForm));
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const text = await res.text();
-      alert(text);
+<script>
+  // ==== Création de compte ====
+  const registerForm = document.getElementById('registerForm');
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(registerForm));
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
+    const text = await res.text();
+    alert(text);
+  });
 
-    // Contact
-    const contactForm = document.getElementById('contactForm');
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = new FormData(contactForm);
-      const res = await fetch('/api/contact', { method: 'POST', body: data });
-      const text = await res.text();
-      alert(text);
-    });
+  // ==== Drag & Drop / Contact ====
+  const contactForm = document.getElementById('contactForm');
+  const uploadZone = document.querySelector('.upload-zone');
+  const fileInput = document.getElementById('fileInput');
+  const uploadBtn = document.querySelector('.upload-btn');
+  const statusDiv = document.getElementById('status');
+  let selectedFile = null;
 
-    // Newsletter
-    const newsletterForm = document.getElementById('newsletterForm');
-    newsletterForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(newsletterForm));
-      const res = await fetch('/api/email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const text = await res.text();
-      alert(text);
-    });
+  function showStatus(type, message) {
+    statusDiv.className = `status ${type}`;
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+  }
 
-    // Mot de passe oublié
-    const forgotForm = document.getElementById('forgotForm');
-    forgotForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(forgotForm));
-      const res = await fetch('/api/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const text = await res.text();
-      alert(text);
-    });
+  function showProgress(percentage) {
+    const progressBar = document.querySelector('.progress-bar');
+    const progressFill = document.querySelector('.progress-fill');
+    progressBar.style.display = 'block';
+    progressFill.style.width = percentage + '%';
+  }
+  function hideProgress() {
+    setTimeout(() => { document.querySelector('.progress-bar').style.display = 'none'; }, 1000);
+  }
 
-    // Réinitialisation mot de passe
-    const resetForm = document.getElementById('resetForm');
-    resetForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(resetForm));
-      const res = await fetch('/api/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const text = await res.text();
-      alert(text);
-    });
-  </script>
+  function handleFileSelection(file) {
+    const maxSize = 3 * 1024 * 1024;
+    const allowedTypes = ['text/plain','application/pdf','image/jpeg','image/png'];
+    const allowedExt = ['.txt','.pdf','.jpg','.jpeg','.png'];
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if(file.size > maxSize){ showStatus('error', `Fichier trop volumineux (${(file.size/1024/1024).toFixed(2)} Mo)`); return; }
+    if(!allowedTypes.includes(file.type) || !allowedExt.includes(ext)){ showStatus('error', `Format non supporté: ${ext}`); return; }
+    selectedFile = file;
+    uploadBtn.disabled = false;
+    showStatus('success', `Fichier sélectionné: ${file.name} → ${(file.type.startsWith("image/")?"Cloudinary":"Local")}`);
+  }
+
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('dragover'); if(e.dataTransfer.files.length>0) handleFileSelection(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', e => { if(e.target.files.length>0) handleFileSelection(e.target.files[0]); });
+
+  contactForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = new FormData(contactForm);
+    if(selectedFile) data.set('file', selectedFile);
+    try {
+      const res = await fetch("/api/contact/upload", { method: 'POST', body: data });
+      const json = await res.json();
+      if(json.success){ showStatus('success', `Message envoyé ! Stockage : ${json.storage}`); uploadBtn.disabled = true; contactForm.reset(); }
+      else showStatus('error', `Erreur : ${json.message}`);
+    } catch(err){ console.error(err); showStatus('error', 'Erreur envoi formulaire'); }
+  });
+
+  // ==== Newsletter ====
+  const newsletterForm = document.getElementById('newsletterForm');
+  newsletterForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(newsletterForm));
+    const res = await fetch('/api/email', { method: 'POST', headers:{ 'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const text = await res.text();
+    alert(text);
+  });
+
+  // ==== Mot de passe oublié ====
+  const forgotForm = document.getElementById('forgotForm');
+  forgotForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(forgotForm));
+    const res = await fetch('/api/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const text = await res.text();
+    alert(text);
+  });
+
+  // ==== Réinitialisation mot de passe ====
+  const resetForm = document.getElementById('resetForm');
+  resetForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(resetForm));
+    const res = await fetch('/api/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const text = await res.text();
+    alert(text);
+  });
+
+  // ==== Signature Canvas ====
+  const canvas = document.getElementById("signatureCanvas");
+  const ctx = canvas.getContext("2d");
+  let drawing=false;
+
+  canvas.addEventListener("mousedown",()=>drawing=true);
+  canvas.addEventListener("mouseup",()=>drawing=false);
+  canvas.addEventListener("mouseout",()=>drawing=false);
+  canvas.addEventListener("mousemove",draw);
+
+  canvas.addEventListener("touchstart",e=>{drawing=true;drawTouch(e);e.preventDefault();});
+  canvas.addEventListener("touchend",()=>drawing=false);
+  canvas.addEventListener("touchmove",e=>{drawTouch(e);e.preventDefault();});
+
+  function draw(e){ if(!drawing) return; ctx.strokeStyle="#fff"; ctx.lineWidth=2; ctx.lineCap="round"; ctx.lineTo(e.offsetX,e.offsetY); ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY);}
+  function drawTouch(e){ if(!drawing) return; const rect=canvas.getBoundingClientRect(); const t=e.touches[0]; const x=t.clientX-rect.left; const y=t.clientY-rect.top; ctx.lineTo(x,y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,y); }
+
+  document.getElementById("clearSignature").addEventListener("click",()=>ctx.clearRect(0,0,canvas.width,canvas.height));
+
+  document.getElementById("saveSignature").addEventListener("click",async()=>{
+    const filename = prompt("Nom du fichier associé (ex: facture1.pdf) :");
+    if(!filename) return alert("Nom de fichier requis");
+    const dataURL = canvas.toDataURL("image/png",0.8);
+    const formData = new FormData();
+    formData.append("signature", dataURL);
+    formData.append("filename", filename);
+    try{
+      const res = await fetch(`/files/${filename}/signature`,{method:"POST",body:formData});
+      const json = await res.json();
+      if(json.success) alert("Signature enregistrée !");
+      else alert("Erreur : "+json.message);
+    }catch(err){ console.error(err); alert("Erreur lors de l'envoi de la signature"); }
+  });
+
+</script>
 </body>
 </html>

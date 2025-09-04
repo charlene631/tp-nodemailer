@@ -1,4 +1,6 @@
-/* Reset basique */
+/* ===============================
+   RESET BASIQUE
+================================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,20 +8,23 @@
   font-family: Arial, sans-serif;
 }
 
-/* Body avec dégradé linéaire */
+/* ===============================
+   BODY
+================================= */
 body {
   background: linear-gradient(to bottom right, #18396a, #6b4ba6);
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
-  margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 
-/* Titres */
+/* ===============================
+   TITRES
+================================= */
 h1 {
   text-align: center;
   margin-bottom: 30px;
@@ -35,7 +40,9 @@ h2 {
   padding-bottom: 5px;
 }
 
-/* Formulaires avec léger fond semi-transparent + dégradé */
+/* ===============================
+   FORMULAIRES
+================================= */
 form {
   background: linear-gradient(to bottom right, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
   padding: 20px 25px;
@@ -45,15 +52,10 @@ form {
   max-width: 500px;
   width: 100%;
   backdrop-filter: blur(6px);
-}
-
-/* Centrer les boutons dans le formulaire */
-form {
   display: flex;
-  flex-direction: column; /* garde les champs empilés verticalement */
-  align-items: center;    /* centre horizontalement tout le contenu */
+  flex-direction: column;
+  align-items: center;
 }
-
 
 /* Champs de saisie */
 input[type="text"],
@@ -75,13 +77,12 @@ textarea::placeholder {
   color: #eee;
 }
 
-/* Textarea */
 textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-/* Boutons avec dégradé et transition */
+/* Boutons */
 button {
   background: linear-gradient(to right, #2a50a1, #6b4ba6);
   color: white;
@@ -92,6 +93,7 @@ button {
   font-size: 14px;
   font-weight: bold;
   transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 button:hover {
@@ -99,18 +101,90 @@ button:hover {
   transform: translateY(-2px);
 }
 
-/* Alert ou messages */
-.alert {
+/* Alert/messages */
+.status {
+  margin: 10px 0;
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 5px;
   font-weight: bold;
+  display: none;
 }
-.alert.success {
+.status.success {
   background-color: rgba(212, 237, 218, 0.8);
   color: #155724;
 }
-.alert.error {
+.status.error {
   background-color: rgba(248, 215, 218, 0.8);
   color: #721c24;
+}
+
+/* ===============================
+   DRAG & DROP
+================================= */
+.upload-zone {
+  border: 3px dashed #fff;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  margin: 15px 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: rgba(255,255,255,0.1);
+}
+
+.upload-zone.dragover,
+.upload-zone:hover {
+  border-color: #fffa;
+  background-color: rgba(255,255,255,0.2);
+  transform: scale(1.02);
+}
+
+.file-input {
+  display: none;
+}
+
+/* Progress bar */
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px 0;
+  display: none;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #fff;
+  transition: width 0.3s;
+  width: 0%;
+}
+
+/* ===============================
+   SIGNATURE CANVAS
+================================= */
+.signature-container {
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  max-width: 520px;
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#signatureCanvas {
+  touch-action: none;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.signature-container button {
+  margin: 5px;
+  background: linear-gradient(to right, #ff6b35, #ff9548);
 }

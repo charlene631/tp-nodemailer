@@ -1,15 +1,40 @@
-import multer from 'multer';
-import path from 'path';
+import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js";
+import fs from "fs";
+import path from "path";
 
-const storage = multer.diskStorage({
+// --- Upload local ---
+const localStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    const uploadDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
+    const uniqueName = Date.now() + "_" + file.originalname;
+    cb(null, uniqueName);
+  },
 });
 
-const upload = multer({ storage });
+const uploadLocal = multer({
+  storage: localStorage,
+  limits: { fileSize: 3 * 1024 * 1024 }, // 3 Mo
+});
 
-export default upload;
+// --- Upload Cloudinary ---
+const cloudStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "documents",
+    allowed_formats: ["jpg","png","jpeg","gif","webp","avif","pdf","txt","docx"],
+  },
+});
+
+const uploadCloudinary = multer({
+  storage: cloudStorage,
+  limits: { fileSize: 3 * 1024 * 1024 },
+});
+
+// **EXPORTS**
+export { uploadLocal, uploadCloudinary };

@@ -46,5 +46,13 @@
     "status": "active",
     "token": null,
     "tokenExpiry": null
+  },
+  {
+    "name": "dragon",
+    "email": "dragon@mail.com",
+    "password": "$2b$10$Qu4Su9LQtesLk6cy9T027OxbZM/Scs0amEJK2XPPYCVNKcrl9Gf8G",
+    "status": "active",
+    "token": null,
+    "tokenExpiry": null
   }
 ]
