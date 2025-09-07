@@ -26,7 +26,7 @@ const uploadLocal = multer({
 const cloudStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "documents",
+    folder: "Documents",
     allowed_formats: ["jpg","png","jpeg","gif","webp","avif","pdf","txt","docx"],
   },
 });
